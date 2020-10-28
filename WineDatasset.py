@@ -79,6 +79,8 @@ acuraciaCLF = accuracy_score(y_validacao, resultsCLF)
 # Criando um grafico de linha comparando o resultado dos treinamentos do KNN e decision tree
 grf.mostrarGraficoLinhas(resultsKNN[melhorAcuraciaIndex]['test_accuracy'],
                          scores['test_accuracy'],
+                         'K-Nearest Neighbors',
+                         'Decision tree',
                          kfolds,
                          [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
                          "Numero do K fold", "Acurácia")
@@ -88,6 +90,14 @@ grf.mostrarGraficoBarras(classificadores,
                          [acuraciaKNN[melhorAcuraciaIndex], acuraciaCLF],
                          "Acurácia na validação",
                          "Classificadores")
+
+grf.mostrarGraficoLinhas(resultsKNN[melhorAcuraciaIndex]['fit_time'],
+                         resultsKNN[melhorAcuraciaIndex]['score_time'],
+                         'Fit time',
+                         'Score time',
+                         kfolds,
+                         [0.000, 0.005, 0.000, 0.010, 0.015, 0.020, 0.025, 0.030, 0.030, 0.035],
+                         "Fit time vs Score time", "Tempo(ms)")
 
 print("Acuracia em Decision tree: ")
 print(acuraciaCLF)

@@ -24,7 +24,6 @@ dados = pd.read_csv("data/segmentation.data", sep=',', encoding='utf-8')
 Y = dados['CLASSIFICATION']
 X = dados.drop(columns=['CLASSIFICATION'])
 
-
 # Cria os arrays com os numeros de vizinhos que vão ser testados e os arrays de resultados
 neighbors = [3, 5, 7, 9, 11, 13, 15]
 resultsKNN = []
@@ -80,9 +79,27 @@ acuraciaCLF = accuracy_score(y_validacao, resultsCLF)
 # Criando um grafico de linha comparando o resultado dos treinamentos do KNN e decision tree
 grf.mostrarGraficoLinhas(resultsKNN[melhorAcuraciaIndex]['test_accuracy'],
                          scores['test_accuracy'],
+                         'K-Nearest Neighbors',
+                         'Decision tree',
                          kfolds,
                          [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
                          "Numero do K fold", "Acurácia")
+
+grf.mostrarGraficoLinhas(resultsKNN[melhorAcuraciaIndex]['test_accuracy'],
+                         scores['test_accuracy'],
+                         'K-Nearest Neighbors',
+                         'Decision tree',
+                         kfolds,
+                         [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+                         "Numero do K fold", "Acurácia")
+
+grf.mostrarGraficoLinhas(resultsKNN[melhorAcuraciaIndex]['fit_time'],
+                         resultsKNN[melhorAcuraciaIndex]['score_time'],
+                         'Fit time',
+                         'Score time',
+                         kfolds,
+                         [0.000, 0.005, 0.000, 0.010, 0.015, 0.020, 0.025, 0.030, 0.030, 0.035],
+                         "Fit time vs Score time", "Tempo(ms)")
 
 # Criando grafico para comparar a acuracia do KNN com o Decision tree
 grf.mostrarGraficoBarras(classificadores,
