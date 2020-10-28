@@ -7,7 +7,7 @@ from sklearn.model_selection import cross_validate
 from sklearn.metrics import accuracy_score
 import Graficos as grf
 
-TOTAL_KFOLDS = 4
+TOTAL_KFOLDS = 3
 
 kfolds = [i + 1 for i in range(TOTAL_KFOLDS)]
 
@@ -18,22 +18,23 @@ metricas = ['accuracy', 'balanced_accuracy']
 classificadores = ['K-Nearest Neighbors', 'Decision tree']
 
 # Lendo o csv
-dados = pd.read_csv("data/winequality-white.csv", sep=';', encoding='utf-8')
+dados = pd.read_csv("data/segmentation.data", sep=',', encoding='utf-8')
 
 # Separando a coluna target(X) dos dados de predição(Y)
-Y = dados['quality']
-X = dados.drop(columns=['quality'])
+Y = dados['CLASSIFICATION']
+X = dados.drop(columns=['CLASSIFICATION'])
 
-# print(X)
-print(Y.values[0])
 
 # Cria os arrays com os numeros de vizinhos que vão ser testados e os arrays de resultados
 neighbors = [3, 5, 7, 9, 11, 13, 15]
 resultsKNN = []
 acuraciaKNN = []
-
+#
 # Separa o dataset em treino e validação
-x_treino, x_validacao, y_treino, y_validacao = train_test_split(X, Y, test_size=0.33, random_state=23)
+x_treino, x_validacao, y_treino, y_validacao = train_test_split(X, Y, test_size=0.33, random_state=3)
+
+# print(x_treino)
+# print(y_treino)
 
 i = 0
 # For variando o numero de neighbors em um knn e gerando os numeros para comparação.
