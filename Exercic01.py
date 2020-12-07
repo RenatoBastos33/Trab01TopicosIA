@@ -11,7 +11,7 @@ from sklearn import preprocessing
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import recall_score
 from sklearn.metrics import precision_score
-
+import ArithmeticFunctions as art
 import pandas as pd
 
 from sklearn.tree import DecisionTreeClassifier
@@ -46,7 +46,6 @@ PrecisaoKNN = []
 PrecisaoAD = []
 PrecisaoRNA = []
 
-
 RecallKNN = []
 RecallAD = []
 RecallRNA = []
@@ -64,7 +63,6 @@ for train, test in skf.split(X, Y):  # este loop tem o número de splits do obje
                         learning_rate='invscaling',
                         max_iter=2000,
                         hidden_layer_sizes=(200,))
-
 
     X_train, X_test = X.values[train], X.values[test]
     y_train, y_test = Y[train], Y[test]
@@ -112,20 +110,63 @@ for train, test in skf.split(X, Y):  # este loop tem o número de splits do obje
     # Calcular as métricas acurácia, precisão e recall dos 3 algoritmos e variações
     # Ex: 3 algs - K-NN com K=1, AD, RNA com 200 neurônios
 
+AvgAcuraciaKNN = art.Average(AcuraciaKNN)
+AvgRecallKNN = art.Average(RecallKNN)
+AvgPrecisionKNN = art.Average(PrecisaoKNN)
+StdAcuraciaKNN = art.standardDeviation(AcuraciaKNN)
+StdRecallKNN = art.standardDeviation(RecallKNN)
+StdPrecisionKNN = art.standardDeviation(PrecisaoKNN)
+
+AvgAcuraciaAD = art.Average(AcuraciaAD)
+AvgRecallAD = art.Average(RecallAD)
+AvgPrecisionAD = art.Average(PrecisaoAD)
+StdAcuraciaAD = art.standardDeviation(AcuraciaAD)
+StdRecallAD = art.standardDeviation(RecallAD)
+StdPrecisionAD = art.standardDeviation(PrecisaoAD)
+
+AvgAcuraciaRNA = art.Average(AcuraciaRNA)
+AvgRecallRNA = art.Average(RecallRNA)
+AvgPrecisionRNA = art.Average(PrecisaoRNA)
+StdAcuraciaRNA = art.standardDeviation(AcuraciaRNA)
+StdRecallRNA = art.standardDeviation(RecallRNA)
+StdPrecisionRNA = art.standardDeviation(PrecisaoRNA)
+
+
+
+
 print("KNN: ")
-print(RecallKNN)
-print(PrecisaoKNN)
+print("Acuracia")
 print(AcuraciaKNN)
+print(AvgAcuraciaKNN)
+print([AvgAcuraciaKNN,StdAcuraciaKNN])
+print("Recall")
+print(RecallKNN)
+print([AvgRecallKNN,StdRecallKNN])
+print("Precisão")
+print(PrecisaoKNN)
+print([AvgPrecisionKNN,StdPrecisionKNN])
 print("")
 print("Arvore de decisão:")
-print(RecallAD)
-print(PrecisaoAD)
+print("Acuracia")
 print(AcuraciaAD)
+print([AvgAcuraciaAD,StdAcuraciaAD])
+print("Recall")
+print(RecallAD)
+print([AvgRecallAD,StdRecallAD])
+print("Precisão")
+print(PrecisaoAD)
+print([AvgPrecisionAD,StdPrecisionAD])
 print("")
 print("RNA:")
-print(RecallRNA)
-print(PrecisaoRNA)
+print("Acuracia")
 print(AcuraciaRNA)
+print([AvgAcuraciaRNA,StdAcuraciaRNA])
+print("Recall")
+print(RecallRNA)
+print([AvgRecallRNA,StdRecallRNA])
+print("Precisão")
+print(PrecisaoRNA)
+print([AvgPrecisionRNA,StdPrecisionRNA])
 
 # Saída do loop: 3 vetores de acurácia com 10 valores para cada algoritmo / 3 vetores de precisão / 3 vetores de recall
 # Calcular média e desvio padrão das 3 métricas
