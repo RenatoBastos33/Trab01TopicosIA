@@ -18,6 +18,7 @@ from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 import sys
 import numpy
+import Graficos as grf
 
 numpy.set_printoptions(threshold=sys.maxsize)
 
@@ -50,12 +51,19 @@ RecallKNN = []
 RecallAD = []
 RecallRNA = []
 
+vizinhosTeste = [1, 2, 3, 5, 7, 9, 11, 13, 15]
+
+AcuraciaVizinho = []
+RecallVizinho = []
+PrecisaoVizinho = []
+
+i = 0
 for train, test in skf.split(X, Y):  # este loop tem o número de splits do objeto skf = 10
     # print("treino")
     # print(train)  # ===> possui a posição dos objetos do conjunto original para compor o conjunto de treino
     # print("teste")
     # print(test)  # ===> possui a posição dos objetos do conjunto original para compor o conjunto de teste
-    KNN = KNeighborsClassifier(n_neighbors=2)
+    KNN = KNeighborsClassifier(n_neighbors=1)
     AD = DecisionTreeClassifier()
     mlp = MLPClassifier(activation='logistic',
                         solver='adam',
@@ -68,7 +76,6 @@ for train, test in skf.split(X, Y):  # este loop tem o número de splits do obje
     y_train, y_test = Y[train], Y[test]
 
     # print(X_train)
-
     KNN.fit(X_train, y_train)
 
     resultKNN = KNN.predict(X_test)
@@ -102,17 +109,22 @@ for train, test in skf.split(X, Y):  # este loop tem o número de splits do obje
     RecallRNA.append(recallRNA)
     PrecisaoRNA.append(precisionRNA)
 
-    # print(X_test)
-    # Montar X_train e y_train
-    # Montar X_test e y_test
+    AvgAcuraciaKNN = art.Average(AcuraciaKNN)
+    AvgRecallKNN = art.Average(RecallKNN)
+    AvgPrecisionKNN = art.Average(PrecisaoKNN)
 
-    # Executar os 3 algoritmos e as variações
-    # Calcular as métricas acurácia, precisão e recall dos 3 algoritmos e variações
-    # Ex: 3 algs - K-NN com K=1, AD, RNA com 200 neurônios
+    AcuraciaVizinho.append(AvgAcuraciaKNN)
+    RecallVizinho.append(AvgRecallKNN)
+    PrecisaoVizinho.append(AvgPrecisionKNN)
 
-AvgAcuraciaKNN = art.Average(AcuraciaKNN)
-AvgRecallKNN = art.Average(RecallKNN)
-AvgPrecisionKNN = art.Average(PrecisaoKNN)
+# grf.mostrarGraficoLinhasMult([AcuraciaVizinho, RecallVizinho, PrecisaoVizinho],
+#                              ["Acuracia", "Recall", "Precisão"],
+#                              vizinhosTeste,
+#                              [0.84, 0.85, 0.86, 0.87, 0.88, 0.89, 0.90, 0.91, 0.92, 0.93, 0.94, 0.95],
+#                              "Metricas por número de vizinhos",
+#                              "Resultado métrica")
+
+
 StdAcuraciaKNN = art.standardDeviation(AcuraciaKNN)
 StdRecallKNN = art.standardDeviation(RecallKNN)
 StdPrecisionKNN = art.standardDeviation(PrecisaoKNN)
@@ -131,42 +143,66 @@ StdAcuraciaRNA = art.standardDeviation(AcuraciaRNA)
 StdRecallRNA = art.standardDeviation(RecallRNA)
 StdPrecisionRNA = art.standardDeviation(PrecisaoRNA)
 
+grf.mostrarGraficoBarras(['KNN', 'Arvore de decisão', 'RNA'],
+                         [AvgAcuraciaKNN, AvgAcuraciaAD, AvgAcuraciaRNA],
+                         'Media da acurácia',
+                         'Classificdores')
 
+grf.mostrarGraficoBarras(['KNN', 'Arvore de decisão', 'RNA'],
+                         [AvgRecallKNN, AvgRecallAD, AvgRecallRNA],
+                         'Media de Recall ',
+                         'Classificdores')
 
+grf.mostrarGraficoBarras(['KNN', 'Arvore de decisão', 'RNA'],
+                         [AvgPrecisionKNN, AvgPrecisionAD, AvgPrecisionRNA],
+                         'Media da Precisão',
+                         'Classificdores')
+
+grf.mostrarGraficoBarras(['KNN', 'Arvore de decisão', 'RNA'],
+                         [StdAcuraciaKNN, StdAcuraciaAD, StdAcuraciaRNA],
+                         'Desvio padrão da acurácia',
+                         'Classificdores', [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+
+grf.mostrarGraficoBarras(['KNN', 'Arvore de decisão', 'RNA'],
+                         [StdRecallKNN, StdRecallAD, StdRecallRNA],
+                         'Desvio padrão do Recall',
+                         'Classificdores', [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+
+grf.mostrarGraficoBarras(['KNN', 'Arvore de decisão', 'RNA'],
+                         [StdPrecisionKNN, StdPrecisionKNN, StdPrecisionRNA],
+                         'Desvio padrão da Precisão',
+                         'Classificdores', [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
 
 print("KNN: ")
 print("Acuracia")
 print(AcuraciaKNN)
 print(AvgAcuraciaKNN)
-print([AvgAcuraciaKNN,StdAcuraciaKNN])
+print([AvgAcuraciaKNN, StdAcuraciaKNN])
 print("Recall")
 print(RecallKNN)
-print([AvgRecallKNN,StdRecallKNN])
+print([AvgRecallKNN, StdRecallKNN])
 print("Precisão")
 print(PrecisaoKNN)
-print([AvgPrecisionKNN,StdPrecisionKNN])
+print([AvgPrecisionKNN, StdPrecisionKNN])
 print("")
 print("Arvore de decisão:")
 print("Acuracia")
 print(AcuraciaAD)
-print([AvgAcuraciaAD,StdAcuraciaAD])
+print([AvgAcuraciaAD, StdAcuraciaAD])
 print("Recall")
 print(RecallAD)
-print([AvgRecallAD,StdRecallAD])
+print([AvgRecallAD, StdRecallAD])
 print("Precisão")
 print(PrecisaoAD)
-print([AvgPrecisionAD,StdPrecisionAD])
+print([AvgPrecisionAD, StdPrecisionAD])
 print("")
 print("RNA:")
 print("Acuracia")
 print(AcuraciaRNA)
-print([AvgAcuraciaRNA,StdAcuraciaRNA])
+print([AvgAcuraciaRNA, StdAcuraciaRNA])
 print("Recall")
 print(RecallRNA)
-print([AvgRecallRNA,StdRecallRNA])
+print([AvgRecallRNA, StdRecallRNA])
 print("Precisão")
 print(PrecisaoRNA)
-print([AvgPrecisionRNA,StdPrecisionRNA])
-
-# Saída do loop: 3 vetores de acurácia com 10 valores para cada algoritmo / 3 vetores de precisão / 3 vetores de recall
-# Calcular média e desvio padrão das 3 métricas
+print([AvgPrecisionRNA, StdPrecisionRNA])
